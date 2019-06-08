@@ -1,7 +1,7 @@
 # inf628-projectfinal
 This repository have the source code of my project final.
 
-Student: Michael Canesche
+Students: Michael Canesche, Lucas Braganca
 
 Professor: Levi Lelis
 

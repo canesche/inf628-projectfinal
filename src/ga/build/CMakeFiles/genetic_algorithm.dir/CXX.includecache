@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/canesche/git/inf628-projectfinal/src/ga/ga.cpp
+ga.h
+/home/canesche/git/inf628-projectfinal/src/ga/ga.h
+
+/home/canesche/git/inf628-projectfinal/src/ga/ga.h
+
+/home/canesche/git/inf628-projectfinal/src/ga/individual.cpp
+individual.h
+/home/canesche/git/inf628-projectfinal/src/ga/individual.h
+
+/home/canesche/git/inf628-projectfinal/src/ga/individual.h
+
+/home/canesche/git/inf628-projectfinal/src/ga/main.cpp
+iostream
+-
+ga.h
+/home/canesche/git/inf628-projectfinal/src/ga/ga.h
+individual.h
+/home/canesche/git/inf628-projectfinal/src/ga/individual.h
+
