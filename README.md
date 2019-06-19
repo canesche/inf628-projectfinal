@@ -1,11 +1,11 @@
-# inf628-projectfinal
+# INF628 - Project Final
 This repository have the source code of my project final.
 
 Students: Michael Canesche, Lucas Braganca
 
 Professor: Levi Lelis
 
-# installation
+# Installation
 
 ## Ubuntu
 
