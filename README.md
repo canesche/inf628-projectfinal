@@ -5,6 +5,16 @@ Students: Michael Canesche, Lucas Braganca
 
 Professor: Levi Lelis
 
+# installation
+
+## Ubuntu
+
+		sudo apt install llvm-dev
+
+## Fedora
+
+		sudo dnf install llvm 
+
 # Acknowledgment
 
-Thanks for Professor Ricardo Ferreira, Fernando ... for ... 
+Thanks for Professor Ricardo Ferreira, Fernando ... and ... 
