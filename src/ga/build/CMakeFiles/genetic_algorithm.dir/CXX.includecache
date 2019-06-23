@@ -15,8 +15,22 @@ ga.h
 /home/canesche/git/inf628-projectfinal/src/ga/individual.cpp
 individual.h
 /home/canesche/git/inf628-projectfinal/src/ga/individual.h
+time.h
+-
+vector
+-
+cstring
+-
+fstream
+-
+sys/resource.h
+-
 
 /home/canesche/git/inf628-projectfinal/src/ga/individual.h
+string
+-
+vector
+-
 
 /home/canesche/git/inf628-projectfinal/src/ga/main.cpp
 iostream

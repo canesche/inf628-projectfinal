@@ -6,7 +6,10 @@ using namespace std;
 
 int main(void) {
 
-     cout << "Hello World ola" << endl;
+     Individual v;
+
+     v.print();
+     printf("evaluate = %f\n",v.evaluate());
 
      return(0);
 
