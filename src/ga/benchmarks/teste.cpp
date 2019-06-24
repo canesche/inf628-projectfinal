@@ -4,7 +4,7 @@
 using namespace std;
 using namespace chrono;
 
-#define N 5
+#define N 10
 
 int f(int n) {
     if (n == 1)

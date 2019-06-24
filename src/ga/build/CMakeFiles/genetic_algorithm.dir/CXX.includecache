@@ -7,10 +7,18 @@
 #IncludeRegexTransform: 
 
 /home/canesche/git/inf628-projectfinal/src/ga/ga.cpp
+algorithm
+-
+cmath
+-
 ga.h
 /home/canesche/git/inf628-projectfinal/src/ga/ga.h
+individual.h
+/home/canesche/git/inf628-projectfinal/src/ga/individual.h
 
 /home/canesche/git/inf628-projectfinal/src/ga/ga.h
+individual.h
+/home/canesche/git/inf628-projectfinal/src/ga/individual.h
 
 /home/canesche/git/inf628-projectfinal/src/ga/individual.cpp
 individual.h

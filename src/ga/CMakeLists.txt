@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(genetic-algorithm)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wextra -Wno-sign-compare")
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
