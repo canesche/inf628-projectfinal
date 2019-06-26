@@ -5,16 +5,17 @@ Students: Michael Canesche, Lucas Braganca
 
 Professor: Levi Lelis
 
-# Installation
+# Installation Guide
 
-## Ubuntu
+Version utilized of LLVM in this work: 8.0
 
-		sudo apt install llvm-dev
+## Ubuntu 18.04
+		Visit: https://apt.llvm.org/
+		Install version 8.0 LLVM
 
-## Fedora
-
+## Fedora 30 or more
 		sudo dnf install llvm 
 
 # Acknowledgment
 
-Thanks for Professor Ricardo Ferreira, Fernando ... and ... 
+Thanks for Professor Ricardo Ferreira, Fernando Quintão and ... 
