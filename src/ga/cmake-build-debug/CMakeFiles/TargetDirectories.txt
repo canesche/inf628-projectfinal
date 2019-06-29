@@ -1,3 +1,0 @@
-/home/canesche/git/inf628-projectfinal/src/ga/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/canesche/git/inf628-projectfinal/src/ga/cmake-build-debug/CMakeFiles/genetic_algorithm.dir
-/home/canesche/git/inf628-projectfinal/src/ga/cmake-build-debug/CMakeFiles/edit_cache.dir

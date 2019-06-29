@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -Wextra -Wno-sign-compare  -rdynamic CMakeFiles/genetic_algorithm.dir/ga.cpp.o CMakeFiles/genetic_algorithm.dir/individual.cpp.o CMakeFiles/genetic_algorithm.dir/main.cpp.o  -o genetic_algorithm 
