@@ -9,16 +9,19 @@ using namespace std;
 class Individual {
     private:
         vector<int> gene;
+        string name;
 
     public:
         Individual();
-        void setIndividual(vector<int>);
-        const int get_size_Individual();
-        const vector<int> getIndividual();
-        void change_individual(int i);
-        const double evaluate();
+        Individual(string);
+        void setIndividual(vector<int> , string );
+        int get_size_Individual() const;
+        vector<int> getIndividual() const;
+        void change_individual(int );
+        double evaluate() const;
         void print();
-        void saveIndividual();
+        void saveIndividual(double );
+        void setGene(int );
 };
 
 #endif

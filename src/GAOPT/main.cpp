@@ -6,21 +6,15 @@ using namespace std;
 
 int main(void) {
 
-     //Individual v;
+     //Individual v = Individual("teste");
 
      //v.print();
      //printf("evaluate = %f\n",v.evaluate());
 
-     GA ga = GA("teste", 100, 100, 10, 20, 20);
+     // string name, int pop_size = 100, int generations = 100, int elite_size = 10, int tour_size = 20, int mut_rate = 20)
 
-     ga.envolve();
-
-     ga.print(0);
-     ga.print(1);
-     ga.print(2);
-     ga.print(3);
-     ga.print(4);
-
+     GA ga_teste = GA("teste", 100, 10, 10, 20, 30);
+     ga_teste.envolve();
+     
      return(0);
-
 }

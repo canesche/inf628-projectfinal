@@ -1,5 +1,5 @@
-; ModuleID = '../benchmarks/teste.cpp'
-source_filename = "../benchmarks/teste.cpp"
+; ModuleID = '../../benchmarks/teste.cpp'
+source_filename = "../../benchmarks/teste.cpp"
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-pc-linux-gnu"
 
@@ -333,4 +333,4 @@ attributes #7 = { argmemonly nounwind }
 !llvm.ident = !{!1}
 
 !0 = !{i32 1, !"wchar_size", i32 4}
-!1 = !{!"clang version 8.0.1-svn363027-1~exp1~20190611211629.77 (branches/release_80)"}
+!1 = !{!"clang version 8.0.1-+rc3-1 (tags/RELEASE_801/rc3)"}

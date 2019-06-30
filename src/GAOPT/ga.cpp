@@ -12,26 +12,25 @@ GA::GA(string name, int pop_size = 100, int generations = 100, int elite_size = 
     this->tournament_size = tour_size;
     this->mutation_rate = mut_rate;
 
-    char create_bc[100];
-    // create a bytecode
-    sprintf(create_bc,"clang++-8 -S -emit-llvm ../benchmarks/%s.cpp -o ../bytecode/%s.ll", name.c_str(), name.c_str());
-    system(create_bc);
+    // create a bitecode
+    string create_bc = "clang++-8 -S -emit-llvm ../../benchmarks/"+name+".cpp -o ../bitecode/"+name+".ll";
+    system(create_bc.c_str());
 
     for (int i = 0; i < pop_size; ++i) {
-        Individual v = Individual();
-        population.push_back(make_pair(v.evaluate(),v));
+        Individual v = Individual(name);
+        population.push_back(make_pair(v.evaluate(), v));
     }
 }
 
-const int GA::get_size_population(){
+int GA::get_size_population() const {
     return this->population_size;
 }
 
-const int GA::get_size_elite() {
+int GA::get_size_elite() const {
     return this->elite_size;
 }
 
-const int GA::get_size_generations(){
+int GA::get_size_generations() const {
     return this->generations_size;
 }
 
@@ -40,16 +39,16 @@ void GA::print(int number) {
     this->population[number].second.print();
 }
 
-const int GA::get_mutate_rate() {
+int GA::get_mutate_rate() const {
     return this->mutation_rate;
 }
 
-const int GA::get_size_tournament() {
+int GA::get_size_tournament() const {
     return this->tournament_size;
 }
 
 bool compareInterval(pair<double,Individual> i1, pair<double,Individual> i2) {
-    return (i1.first < i2.first);
+    return (i1.first > i2.first);
 }
 
 pair<double, Individual> GA::mutation(pair<double, Individual> ind){
@@ -59,6 +58,15 @@ pair<double, Individual> GA::mutation(pair<double, Individual> ind){
         prob = 1 + rand() % 100;
         if (prob <= get_mutate_rate()){
             ind.second.change_individual(i);
+        }
+    }
+
+    // probability of grow up the vector
+    prob = 1 + rand() % 100;
+    if (prob <= get_mutate_rate()){
+        int n = 1 + rand() % 10;
+        for (int i = 0; i < n; ++i) {
+            ind.second.setGene(rand() % 173);
         }
     }
 
@@ -113,8 +121,8 @@ pair<Individual,Individual> GA::crossover(Individual i1, Individual i2) {
         aux2[i] = i1.getIndividual()[i-n2];
     }
 
-    f1.setIndividual(aux1);
-    f2.setIndividual(aux2);
+    f1.setIndividual(aux1, this->name);
+    f2.setIndividual(aux2, this->name);
 
     return make_pair(f1, f2);
 }
@@ -127,6 +135,11 @@ void GA::envolve() {
 
     vector<pair<double, Individual>> new_pop(tam_population);
     pair<Individual,Individual> child;
+    pair<double,Individual> best_pop_global;
+
+    best_pop_global.first = population[0].first;
+    best_pop_global.second = population[0].second;
+    int id_best = 0; 
 
     for (int i = 0; i < tam_generation; ++i) {
         // sorting vector population
@@ -135,6 +148,22 @@ void GA::envolve() {
         printf("Generation: %d best individual %f\n", i, population[0].first);
         population[0].second.print();
 
+        if (best_pop_global.first < population[0].first) {
+            best_pop_global.first = population[0].first;
+            best_pop_global.second = population[0].second;
+            id_best = i;
+        }
+
+        if (i == tam_generation-1) {
+            printf("Best all Generation: %d best individual %f\n", id_best, best_pop_global.first);
+            best_pop_global.second.print();
+
+            // save the file in txt
+            best_pop_global.second.saveIndividual(best_pop_global.first);
+
+            break;
+        }
+
         // selection the best individuals of population before
         for (int j = 0; j < tam_elite; ++j) {
             new_pop[j] = mutation(population[i]);
@@ -142,7 +171,6 @@ void GA::envolve() {
 
         Individual c1, c2;
 
-        printf("tam pop! %d\n",tam_population);
         for (int j = tam_elite; j < tam_population; j+=2) {
             c1 = tournament(population, tam_population);
             c2 = tournament(population, tam_population);
@@ -153,11 +181,7 @@ void GA::envolve() {
             new_pop[j+1] = make_pair(child.second.evaluate(), child.second);
         }
 
-        // update
+        // update the population
         population = new_pop;
     }
-
-
-
-
 }

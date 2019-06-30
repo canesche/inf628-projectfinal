@@ -15,11 +15,11 @@ class GA {
         vector<pair<double, Individual>> population;
     public:
         GA(string, int, int, int, int, int);
-        const int get_size_population();
-        const int get_size_elite();
-        const int get_size_generations();
-        const int get_size_tournament();
-        const int get_mutate_rate();
+        int get_size_population() const;
+        int get_size_elite() const;
+        int get_size_generations() const;
+        int get_size_tournament() const;
+        int get_mutate_rate() const;
         Individual tournament(vector<pair<double, Individual>> , int);
         pair<Individual,Individual> crossover(Individual , Individual);
         pair<double, Individual> mutation(pair<double, Individual> );
