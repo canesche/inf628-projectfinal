@@ -4,9 +4,9 @@ from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual, GeneticAlgo
 
 
 class MyIndividual(BaseIndividual):
-    def __init__(self):
+    def __init__(self, args):
         super().__init__()
-        self.gene = [1 if random.random() < 0.00001 else 0 for _ in range(10)]
+        self.gene = [0 for _ in range(10)]
 
     def evaluate(self):
         return sum(self.gene)
@@ -22,5 +22,5 @@ class MyIndividual(BaseIndividual):
                 self.gene[i] = 1 if self.gene[i] == 0 else 0
 
 
-ga = GeneticAlgorithm(100, 0.4, 0.3)
-ga.evolution(300, MyIndividual, True)
+ga = GeneticAlgorithm(100, 100, 0.2, 0.2, MyIndividual, None, None)
+ga.evolution(True)

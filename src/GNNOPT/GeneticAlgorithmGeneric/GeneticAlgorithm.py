@@ -1,23 +1,30 @@
 import heapq
 import random
 from copy import deepcopy
+from math import ceil
 
 
 class GeneticAlgorithm:
-    def __init__(self, num_gen, pb_cx, pb_mut, pop_size, Individual,IndividualArgs):
+    def __init__(self, num_gen, pop_size, pb_cx, pb_mut, Individual, IndividualArgs, outputfile=None):
         self.num_gen = num_gen
         self.pb_cx = pb_cx
         self.pb_mut = pb_mut
+        self.pop_size = pop_size
         self.population = [Individual(IndividualArgs) for _ in range(pop_size)]
+        self.outputfile = outputfile
+        if outputfile:
+            f = open(self.outputfile, 'w')
+            f.write('GENERATION,FITNESS MAX,FITNESS MIN,MEAN,STD\n')
 
-    def evolution(self,print_statistics):
-
+    def evolution(self, print_statistics):
+        if print_statistics:
+            print("Start evolution ...")
         for ind in self.population:
             score = self.evaluate(ind)
             ind.set_fitness(score)
 
         for g in range(self.num_gen):
-            offspring = self.selection(10)
+            offspring = self.selection(int(ceil(self.pop_size * 0.3)))
             offspring = list(map(deepcopy, offspring))
             for child1, child2 in zip(offspring[::2], offspring[1::2]):
                 if random.random() < self.pb_cx:
@@ -40,6 +47,8 @@ class GeneticAlgorithm:
             if print_statistics:
                 self.statistics(g, len(recal_ind))
 
+        if print_statistics:
+            print("End of evolution!")
         return max(self.population)
 
     def getKbest(self, population, k):
@@ -84,10 +93,11 @@ class GeneticAlgorithm:
         print(" Fitness Avg: %s" % (mean1))
         print(" Fitness Std: %s" % (std1))
         print()
-
-        f = open('data_graph.txt', 'a')
-        f.write('%d,%f\n' % (generation + 1, best_ind.get_fitness()))
-        f.close()
+        if self.outputfile:
+            f = open(self.outputfile, 'a')
+            f.write(
+                '%d, %f, %f, %f, %f\n' % (generation + 1, best_ind.get_fitness(), worst_ind.get_fitness(), mean1, std1))
+            f.close()
 
 
 class BaseIndividual:
