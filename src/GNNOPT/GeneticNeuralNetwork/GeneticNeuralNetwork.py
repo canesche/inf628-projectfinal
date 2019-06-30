@@ -1,14 +1,9 @@
 import random
-import sys
 
 from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual
 from NeuralNetwork.ActivationFunctions import Relu, Sigmoid
 from NeuralNetwork.NeuralNetwork import NeuralNetwork
-
-if sys.version_info < (2, 7):
-    import commands
-else:
-    import subprocess
+from Utils.Utils import commands_getoutput
 
 
 class MyIndividual(BaseIndividual):
@@ -57,18 +52,23 @@ class MyIndividual(BaseIndividual):
 
     def __init__(self, args):
         super().__init__()
-        self.code_path = args[0]
-        self.input = args[1]
+        self.work_dir = args[0]
+        self.bitcode_file = args[1]
+        self.features = args[2]
+
+        self.bc_file = '%s/out.bc' % self.work_dir
+        self.ll_file = '%s/out.ll' % self.work_dir
+        self.exe_file = '%s/out.exe' % self.work_dir
+
         num_hidden = random.randint(1, 5)
         dims = [random.randint(10, 30) for _ in range(num_hidden + 2)]
-        dims[0] = len(self.input)
+        dims[0] = len(self.features)
         dims[num_hidden + 1] = random.randint(10, 100)
         self.gene = NeuralNetwork(dims, Sigmoid(), Relu(), 0.0)
-        self.commands_getoutput('clang++ -std=c++11 -c -emit-llvm %s -o %s' % (self.code_path, '/tmp/out.ll'))
 
     def output(self):
         r = ''
-        out = self.gene.forward(self.input)
+        out = self.gene.forward(self.features)
         for line in out:
             for col in line:
                 x = int(col * 10)
@@ -80,22 +80,11 @@ class MyIndividual(BaseIndividual):
                     r += self.__CONST_FLAGS[x] + ' '
         return r
 
-    def commands_getoutput(self, cmd):
-        try:
-            if sys.version_info < (2, 7):
-                return commands.getoutput(cmd)
-            else:
-                byte_out = subprocess.check_output(cmd.split())
-                str_out = byte_out.decode("utf-8")
-                return str_out
-        except Exception as e:
-            return str(e)
-
     def evaluate(self):
         out = self.output()
-        self.commands_getoutput('opt %s -S -o %s %s' % (out, '/tmp/out.bc', '/tmp/out.ll'))
-        self.commands_getoutput('clang++ %s -lm -o %s' % ('/tmp/out.bc', '/tmp/out.exe'))
-        time = float(self.commands_getoutput('/tmp/out.exe'))
+        commands_getoutput('opt %s -S -o %s %s' % (out, self.bc_file, self.ll_file))
+        commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
+        time = float(commands_getoutput(self.exe_file))
         return 1 / time
 
     def __crossover(self, ind1, ind2):
