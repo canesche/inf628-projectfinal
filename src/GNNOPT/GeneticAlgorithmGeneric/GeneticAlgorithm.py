@@ -19,6 +19,7 @@ class GeneticAlgorithm:
     def evolution(self, print_statistics):
         if print_statistics:
             print("Start evolution ...")
+
         for ind in self.population:
             score = self.evaluate(ind)
             ind.set_fitness(score)

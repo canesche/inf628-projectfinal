@@ -1,8 +1,6 @@
 import random
 import sys
 
-import numpy as np
-
 from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual
 from NeuralNetwork.ActivationFunctions import Relu, Sigmoid
 from NeuralNetwork.NeuralNetwork import NeuralNetwork
@@ -62,13 +60,11 @@ class MyIndividual(BaseIndividual):
         self.code_path = args[0]
         self.input = args[1]
         num_hidden = random.randint(1, 5)
-        dims = [random.randint(10, 20) for _ in range(num_hidden + 2)]
+        dims = [random.randint(10, 30) for _ in range(num_hidden + 2)]
         dims[0] = len(self.input)
         dims[num_hidden + 1] = random.randint(10, 100)
         self.gene = NeuralNetwork(dims, Sigmoid(), Relu(), 0.0)
-        lf = lambda x: (x + random.uniform(-1, 1)) if random.random() < 0.1 else x
-        self.__inmutate = np.vectorize(lf)
-        self.commands_getoutput('clang -std=c++11 -c -emit-llvm %s -o %s' % (self.code_path, '/tmp/out.ll'))
+        self.commands_getoutput('clang++ -std=c++11 -c -emit-llvm %s -o %s' % (self.code_path, '/tmp/out.ll'))
 
     def output(self):
         r = ''
@@ -106,15 +102,27 @@ class MyIndividual(BaseIndividual):
         l1, c1 = ind1.shape
         l2, c2 = ind2.shape
         l, c = min(l1, l2), min(c1, c2)
+        randR = random.randint(0, l - 1)
+        randC = random.randint(0, c - 1)
         for i in range(l):
             for j in range(c):
-                if random.random() < 0.5:
+                if (i < randR) or (i == randR and j <= randC):
                     ind1[i][j], ind2[i][j] = ind2[i][j], ind1[i][j]
 
     def crossover(self, partner):
         for w, pw in zip(self.gene.weights, partner.gene.weights):
             self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
 
+    def __mutate(self, ind):
+        l, c = ind.shape
+        randC = random.randint(0, l - 1)
+        for i in range(c):
+            ind[randC][i] += random.uniform(-1, 1)
+            if ind[randC][i] > 1:
+                ind[randC][i] = 1
+            elif ind[randC][i] < -1:
+                ind[randC][i] = -1
+
     def mutate(self):
         for w in self.gene.weights:
-            self.__inmutate(self.gene.weights[w])
+            self.__mutate(self.gene.weights[w])
