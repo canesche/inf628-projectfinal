@@ -83,7 +83,7 @@ class MyIndividual(BaseIndividual):
     def evaluate(self):
         out = self.output()
         commands_getoutput('opt %s -S -o %s %s' % (out, self.bc_file, self.ll_file))
-        commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
+        commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
         time = float(commands_getoutput(self.exe_file))
         return 1 / time
 
