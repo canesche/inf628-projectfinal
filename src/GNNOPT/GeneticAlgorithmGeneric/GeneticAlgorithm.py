@@ -87,8 +87,6 @@ class GeneticAlgorithm:
 
         print("Generation %d:" % (generation + 1))
         print(" Evaluated %i individuals" % recal_ind)
-        print(" Best individual is: %s" % (best_ind.get_fitness()))
-        print(" Worst individual is: %s" % (worst_ind.get_fitness()))
         print(" Fitness Min: %s" % (worst_ind.get_fitness()))
         print(" Fitness Max: %s" % (best_ind.get_fitness()))
         print(" Fitness Avg: %s" % (mean))
