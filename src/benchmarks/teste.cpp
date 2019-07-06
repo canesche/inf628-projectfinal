@@ -1,12 +1,6 @@
-#include <iostream>
-#include <chrono>
 
-using namespace std;
-using namespace chrono;
 
-#define N 10
-
-int f(int n) {
+long long int f(long n) {
     if (n == 1)
         return 1;
     if (n == 2)
@@ -15,15 +9,8 @@ int f(int n) {
 }
 
 int main() {
-
-    double total = 0;
-    for (int i = 0; i < N; i++) {
-        auto begin = high_resolution_clock::now();
-        int a = f(10);
-        duration<double> diff = high_resolution_clock::now() - begin;
-        total += diff.count()*1000;
-    }
-
-    printf("%f", total/N);
-	return 0;
+    
+    long long int a = f(10);
+    
+	return a;
 }
