@@ -16,3 +16,7 @@ def commands_getoutput(cmd):
             return str_out
     except Exception as e:
         return str(e)
+
+
+def map_number(x, in_min, in_max, out_min, out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min

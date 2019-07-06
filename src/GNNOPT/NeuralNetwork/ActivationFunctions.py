@@ -1,5 +1,6 @@
 import numpy as np
 
+np.seterr('ignore')
 
 class ActivationFunction:
     def derivative(self, A):

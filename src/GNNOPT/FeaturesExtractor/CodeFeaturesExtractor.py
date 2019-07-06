@@ -14,9 +14,9 @@ else:
 class Features:
     def __init__(self, file_name):
         self.__file_name = file_name
-        self.__features = {'blocks': 0, 'functions': 0, 'global_vars': 0, 'term_ops': 0,
-                           'bin_ops': 0, 'bit_bin_ops': 0, 'vec_ops': 0, 'agg_ops': 0,
-                           'mem_ops': 0, 'conv_ops': 0, 'others_ops': 0}
+        self.__features = {'blocks': 0.0, 'functions': 0.0, 'global_vars': 0.0, 'term_ops': 0.0,
+                           'bin_ops': 0.0, 'bit_bin_ops': 0.0, 'vec_ops': 0.0, 'agg_ops': 0.0,
+                           'mem_ops': 0.0, 'conv_ops': 0.0, 'others_ops': 0.0}
 
     def get_file_name(self):
         return self.__file_name
@@ -82,6 +82,11 @@ class CodeFeaturesExtractor:
             features.append(self.extract(f))
 
         return features
+
+    def get_single_train_data(self, filepath):
+        features = []
+        features.append(self.extract(filepath).get_array())
+        return np.array(features).T
 
     def get_train_data(self, dir):
         files = []

@@ -1,12 +1,13 @@
 import random
+import time
 
 from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual
 from NeuralNetwork.ActivationFunctions import Relu, Sigmoid
 from NeuralNetwork.NeuralNetwork import NeuralNetwork
-from Utils.Utils import commands_getoutput
+from Utils.Utils import commands_getoutput, map_number
 
 
-class MyIndividual(BaseIndividual):
+class NeuralNetworkIndividual(BaseIndividual):
     __CONST_FLAGS = [
         '-aa', '-adce', '-add-discriminators', '-alignment-from-assumptions', '-alloca-hoisting', '-always-inline',
         '-argpromotion', '-asan', '-assumption-cache-tracker', '-atomic-expand', '-barrier', '-basicaa', '-basiccg',
@@ -53,39 +54,45 @@ class MyIndividual(BaseIndividual):
     def __init__(self, args):
         super().__init__()
         self.work_dir = args[0]
-        self.bitcode_file = args[1]
         self.features = args[2]
-
+        self.ll_file = args[1]
         self.bc_file = '%s/out.bc' % self.work_dir
-        self.ll_file = '%s/out.ll' % self.work_dir
         self.exe_file = '%s/out.exe' % self.work_dir
+        self.max_flags = len(self.__CONST_FLAGS)
 
         num_hidden = random.randint(1, 5)
         dims = [random.randint(10, 30) for _ in range(num_hidden + 2)]
         dims[0] = len(self.features)
-        dims[num_hidden + 1] = random.randint(10, 100)
-        self.gene = NeuralNetwork(dims, Sigmoid(), Relu(), 0.0)
+        dims[num_hidden + 1] = random.randint(10, self.max_flags - 1)
 
-    def output(self):
+        self.gene = NeuralNetwork(dims, Relu(), Sigmoid(), 0.0)
+
+    def get_flags(self):
         r = ''
-        out = self.gene.forward(self.features)
+        flags = []
+        out = self.gene.forward(self.features).T
         for line in out:
             for col in line:
-                x = int(col * 10)
+                x = int(map_number(col, 0, 1, 0, len(self.__CONST_FLAGS) - 1))
                 if x < 0:
-                    r += self.__CONST_FLAGS[0] + ' '
-                elif x > 173:
-                    r += self.__CONST_FLAGS[173] + ' '
-                else:
-                    r += self.__CONST_FLAGS[x] + ' '
-        return r
+                    x = 0
+                elif x >= self.max_flags:
+                    x = self.max_flags - 1
+
+                r += self.__CONST_FLAGS[x] + ' '
+            flags.append(r)
+            r = ''
+        return flags
 
     def evaluate(self):
-        out = self.output()
-        commands_getoutput('opt %s -S -o %s %s' % (out, self.bc_file, self.ll_file))
-        commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
-        time = float(commands_getoutput(self.exe_file))
-        return 1 / time
+        t = 0
+        for flags, ll_file in zip(self.get_flags(), self.ll_file):
+            commands_getoutput('opt %s -S -o %s %s' % (flags, self.bc_file, ll_file))
+            commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
+            now = time.time()
+            commands_getoutput(self.exe_file)
+            t += time.time() - now
+        return 1 / t
 
     def __crossover(self, ind1, ind2):
         l1, c1 = ind1.shape

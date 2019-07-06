@@ -10,7 +10,7 @@ class NeuralNetwork:
         self.lamb = lamb
 
         for i in range(1, self.L):
-            self.weights[f'W{i}'] = np.random.randn(dims[i], dims[i - 1]) * (2 / np.sqrt(dims[i - 1]))
+            self.weights[f'W{i}'] = np.random.randn(dims[i], dims[i - 1])
             self.weights[f'B{i}'] = np.zeros((dims[i], 1))
 
     def getError(self):
