@@ -1,6 +1,5 @@
 import argparse
 import pickle
-import random
 import traceback
 
 from FeaturesExtractor.CodeFeaturesExtractor import CodeFeaturesExtractor
@@ -10,8 +9,6 @@ from Utils.Utils import commands_getoutput, map_number
 
 
 def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
-    random.seed(0)
-
     f = CodeFeaturesExtractor()
     features = f.get_features(file_dir)
     features_train = f.get_train_data(file_dir)
@@ -42,8 +39,6 @@ def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross,
 
 
 def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
-    random.seed(0)
-
     f = CodeFeaturesExtractor()
     features_train = f.get_single_train_data(file_path)
 
