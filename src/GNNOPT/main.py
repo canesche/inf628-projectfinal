@@ -28,7 +28,7 @@ def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross,
 
     for i in range(len(features)):
         commands_getoutput(
-            'clang++ -std=c++11 -c -emit-llvm %s -o %s' % (features[i].get_file_name(), work_dir + '/out%d.ll' % i))
+            'clang++ -w -std=c++11 -c -emit-llvm %s -o %s' % (features[i].get_file_name(), work_dir + '/out%d.ll' % i))
         files.append(work_dir + '/out%d.ll' % i)
 
     ga = GeneticAlgorithm(num_generations, num_individuals, pb_cross, pb_mutate, NeuralNetworkIndividual,

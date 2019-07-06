@@ -87,8 +87,8 @@ class NeuralNetworkIndividual(BaseIndividual):
     def evaluate(self):
         t = 0
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
-            commands_getoutput('opt %s -S -o %s %s' % (flags, self.bc_file, ll_file))
-            commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
+            commands_getoutput('opt -no-warn %s -S -o %s %s' % (flags, self.bc_file, ll_file))
+            commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
             for i in range(10):
                 now = time.time()
                 commands_getoutput(self.exe_file)
@@ -107,9 +107,18 @@ class NeuralNetworkIndividual(BaseIndividual):
                 if (i < randR) or (i == randR and j <= randC):
                     ind1[i][j], ind2[i][j] = ind2[i][j], ind1[i][j]
 
+    def __ucrossover(self, ind1, ind2, prob_m):
+        l1, c1 = ind1.shape
+        l2, c2 = ind2.shape
+        l, c = min(l1, l2), min(c1, c2)
+        for i in range(l):
+            for j in range(c):
+                if random.random() < prob_m:
+                    ind1[i][j], ind2[i][j] = ind2[i][j], ind1[i][j]
+
     def crossover(self, partner):
         for w, pw in zip(self.gene.weights, partner.gene.weights):
-            self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
+            self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
 
     def __mutate(self, ind):
         l, c = ind.shape
@@ -121,6 +130,13 @@ class NeuralNetworkIndividual(BaseIndividual):
             elif ind[randC][i] < -1:
                 ind[randC][i] = -1
 
+    def __umutate(self, ind, prob_m):
+        l, c = ind.shape
+        for i in range(l):
+            for j in range(c):
+                if random.random() < prob_m:
+                    ind[i][j] += 0.01 * (random.random() * 2 - 1)
+
     def mutate(self):
         for w in self.gene.weights:
-            self.__mutate(self.gene.weights[w])
+            self.__umutate(self.gene.weights[w], 0.01)

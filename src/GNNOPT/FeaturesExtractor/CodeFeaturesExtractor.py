@@ -46,10 +46,10 @@ class Features:
 
 
 class CodeFeaturesExtractor:
-    __cmd = 'clang -std=c++11 -c -emit-llvm %s -o %s'
+    __cmd = 'clang++ -w -std=c++11 -c -emit-llvm %s -o %s'
 
     __TERM_OPS = ['ret', 'br', 'swicth', 'indirectbr', 'invoke', 'resume', 'unreachable']
-    __BIN_OPS = ['add', 'fadd', 'sub', 'fsub', 'mul', 'fmul', 'udiv', 'sdif', 'fdiv', 'urem', 'srem', 'frem']
+    __BIN_OPS = ['add', 'fadd', 'sub', 'fsub', 'mul', 'fmul', 'udiv', 'sdiv', 'fdiv', 'urem', 'srem', 'frem']
     __BITBIN_OPS = ['shl', 'lshr', 'ashr', 'and', 'or', 'xor']
     __VEC_OPS = ['extractelement', 'insertelement', 'shufflevector']
     __AGG_OPS = ['extractvalue', 'insertvalue']
