@@ -131,7 +131,7 @@ void Individual::print() {
 
 // Evaluate the Individual
 double Individual::evaluate() const {
-    auto begin = high_resolution_clock::now();
+    //auto begin = high_resolution_clock::now();
     if (this->gene.size() == 0) {
         return -1;
     }
@@ -148,7 +148,7 @@ double Individual::evaluate() const {
 
     // create the optimizer
     create_sys = "opt-8 "+flags+" -S -o opt_"+name+".ll ../bitecode/"+name+".ll\n";
-    create_sys += "clang++-8 opt_"+name+".ll -lm\n";
+    create_sys += "clang++ -w -std=c++11 opt_"+name+".ll -lm\n";
     create_sys += "./a.out > time.txt";
 
     // execute code external
@@ -167,9 +167,9 @@ double Individual::evaluate() const {
     getline(read, time);
     read.close();
 
-    duration<double> diff = high_resolution_clock::now() - begin;
+    //duration<double> diff = high_resolution_clock::now() - begin;
 
-    printf("%f\n", diff.count());
+    //printf("%f\n", diff.count());
 
     // time in milliseconds
     return 1.0/stod(time);
