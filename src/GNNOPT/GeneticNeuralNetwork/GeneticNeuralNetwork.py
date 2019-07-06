@@ -89,9 +89,11 @@ class NeuralNetworkIndividual(BaseIndividual):
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
             commands_getoutput('opt %s -S -o %s %s' % (flags, self.bc_file, ll_file))
             commands_getoutput('clang++ %s -lm -o %s' % (self.bc_file, self.exe_file))
-            now = time.time()
-            commands_getoutput(self.exe_file)
-            t += time.time() - now
+            for i in range(10):
+                now = time.time()
+                commands_getoutput(self.exe_file)
+                t += time.time() - now
+            t /= 10
         return 1 / t
 
     def __crossover(self, ind1, ind2):
