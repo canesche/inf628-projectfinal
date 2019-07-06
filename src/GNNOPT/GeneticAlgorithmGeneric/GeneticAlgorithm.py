@@ -78,9 +78,9 @@ class GeneticAlgorithm:
         all_fitness_score = [ind.get_fitness() for ind in self.population]
 
         length = len(self.population)
-        mean1 = sum(all_fitness_score) / length
-        sum2 = sum(x * x for x in all_fitness_score)
-        std1 = abs(sum2 / length - mean1 ** 2) ** 0.5
+        mean = sum(all_fitness_score) / length
+        aux = sum(((x - mean) ** 2) for x in all_fitness_score)
+        std = ((1 / length) * aux) ** 0.5
 
         best_ind = max(self.population)
         worst_ind = min(self.population)
@@ -91,13 +91,13 @@ class GeneticAlgorithm:
         print(" Worst individual is: %s" % (worst_ind.get_fitness()))
         print(" Fitness Min: %s" % (worst_ind.get_fitness()))
         print(" Fitness Max: %s" % (best_ind.get_fitness()))
-        print(" Fitness Avg: %s" % (mean1))
-        print(" Fitness Std: %s" % (std1))
+        print(" Fitness Avg: %s" % (mean))
+        print(" Fitness Std: %s" % (std))
         print()
         if self.outputfile:
             f = open(self.outputfile, 'a')
             f.write(
-                '%d, %f, %f, %f, %f\n' % (generation + 1, best_ind.get_fitness(), worst_ind.get_fitness(), mean1, std1))
+                '%d, %f, %f, %f, %f\n' % (generation + 1, best_ind.get_fitness(), worst_ind.get_fitness(), mean, std))
             f.close()
 
 
