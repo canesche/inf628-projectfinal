@@ -43,9 +43,6 @@ const char* CONST_FLAGS[NUMBERS_FLAGS] = {
         "-rpo-functionattrs", "-slp-vectorizer", "-strip-dead-prototypes"
         };
 
-int flag_problem[53] = {29, 27, 42, 10, 9, 33, 7, 42, 33, 3, 5, 8, 48, 39, 13, 46, 37, 11, 22, 31, 27, 43, 27, 18, 37,
-         39, 28, 21, 44, 34, 25, 26, 14, 17, 36, 23, 0, 43, 17, 36, 48, 24, 46, 46, 15, 9, 43, 2, 23, 17, 36, 0, 10};
-
 // Constructor
 Individual::Individual(){ }
 
@@ -57,7 +54,7 @@ Individual::Individual(string name){
     // Size initial of genes
     srand(time(nullptr)+rand());
     int n;
-    const int size = 1 + rand() % 100;
+    const int size = 1; //1+ rand() % 25;
     bool have[NUMBERS_FLAGS];
 
     for(int i = 0; i < NUMBERS_FLAGS; ++i){
@@ -66,12 +63,6 @@ Individual::Individual(string name){
         //  printf("%d\n", i);
         //}
     }
-
-    /* 
-    for(int i = 0; i < NUMBERS_FLAGS; i++) {
-        [29 27 42 10 9 33 7 42 33 3 5 8 48 39 13 46 37 11 22 31 27 43 27 18 37
-         39 28 21 44 34 25 26 14 17 36 23 0 43 17 36 48 24 46 46 15 9 43 2 23 17 36 0 10]
-    }*/
 
     // Initializathe elements of genes randomize
     for (int i = 0; i < size; ++i) {
@@ -132,9 +123,9 @@ void Individual::print() {
 // Evaluate the Individual
 double Individual::evaluate() const {
     //auto begin = high_resolution_clock::now();
-    if (this->gene.size() == 0) {
+    /*if (this->gene.size() == 0) {
         return -1;
-    }
+    }*/
 
     string flags = " ";
 
@@ -143,36 +134,32 @@ double Individual::evaluate() const {
         flags += " ";
     }
 
-    string create_sys;
+    string create_sys, create_exec;
     string name = this->name;
 
     // create the optimizer
-    create_sys = "opt-8 "+flags+" -S -o opt_"+name+".ll ../bitecode/"+name+".ll\n";
-    create_sys += "clang++ -w -std=c++11 opt_"+name+".ll -lm\n";
-    create_sys += "./a.out > time.txt";
+    create_sys = "opt -no-warn "+flags+" -S -o ../bitecode/opt_"+name+".ll ../bitecode/"+name+".ll\n";
+    create_sys += "clang++ -w ../bitecode/opt_"+name+".ll -lm -o "+name+".out";
+    create_exec = "./"+name+".out";
 
     // execute code external
-    try {
-        system(create_sys.c_str());
-        //printf("o codigo que apareceu foi %d\n", a);
-    } catch (...) {
-        return 1000;
+    system(create_sys.c_str());
+
+    duration<double> diff;
+
+    double worst = -1.0, total = 0.0;
+    for (int i = 0; i < 10; i++) {
+        auto begin = high_resolution_clock::now();
+        system(create_exec.c_str());
+        diff = high_resolution_clock::now() - begin;
+        if (worst < diff.count()) {
+            worst = diff.count();
+        }
+        total += diff.count();
     }
 
-    ifstream read;
-    read.open("time.txt", ios::in);
-
-    string time;
-
-    getline(read, time);
-    read.close();
-
-    //duration<double> diff = high_resolution_clock::now() - begin;
-
-    //printf("%f\n", diff.count());
-
     // time in milliseconds
-    return 1.0/stod(time);
+    return 1.0/(total/10.0);
 }
 
 void Individual::saveIndividual(double value){
