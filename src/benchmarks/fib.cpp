@@ -1,4 +1,7 @@
+#include <chrono>
 
+using namespace std;
+using namespace std::chrono;
 
 long long int f(long n) {
     if (n == 1)
@@ -9,6 +12,7 @@ long long int f(long n) {
 }
 
 int main() {
+    
     
     long long int a = f(10);
     
