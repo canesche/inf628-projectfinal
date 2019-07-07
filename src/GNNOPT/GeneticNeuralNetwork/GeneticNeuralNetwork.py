@@ -45,9 +45,12 @@ class NeuralNetworkIndividual(BaseIndividual):
         t = 0
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
             r = commands_getoutput('opt %s -S %s -o %s' % (flags, ll_file, self.bc_file))
-            r += commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
             if len(r) == 0:
-                t = float(commands_getoutput(self.exe_file))
+                r = commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
+                if len(r) == 0:
+                    t = float(commands_getoutput(self.exe_file))
+                else:
+                    t = 100000
             else:
                 t = 1000000
         return 1 / t
