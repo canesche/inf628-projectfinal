@@ -87,8 +87,8 @@ class NeuralNetworkIndividual(BaseIndividual):
     def evaluate(self):
         t = 0
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
-            commands_getoutput('opt -no-warn %s -S -o %s %s >/dev/null 2>&1' % (flags, self.bc_file, ll_file))
-            commands_getoutput('clang++ -w %s -lm -o %s >/dev/null 2>&1' % (self.bc_file, self.exe_file))
+            commands_getoutput('opt -no-warn %s -S -o %s %s' % (flags, self.bc_file, ll_file))
+            commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
             for i in range(10):
                 now = time.time()
                 commands_getoutput(self.exe_file)
