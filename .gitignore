@@ -6,5 +6,12 @@
 **/cmake-build-debug
 **/cmake-build-default
 **/*.vscode
+**/*.bc
+**/*.ll
+**/*.exe
+**/*.csv
+**/*.dat
+
+
 
 

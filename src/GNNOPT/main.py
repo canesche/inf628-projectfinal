@@ -5,7 +5,7 @@ import traceback
 from FeaturesExtractor.CodeFeaturesExtractor import CodeFeaturesExtractor
 from GeneticAlgorithmGeneric.GeneticAlgorithm import GeneticAlgorithm
 from GeneticNeuralNetwork.GeneticNeuralNetwork import NeuralNetworkIndividual
-from Utils.Utils import commands_getoutput, map_number
+from Utils.Utils import commands_getoutput, map_number, get_all_opt_flags_available
 
 
 def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
@@ -28,8 +28,10 @@ def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross,
             'clang++ -w -std=c++11 -c -emit-llvm %s -o %s' % (features[i].get_file_name(), work_dir + '/out%d.ll' % i))
         files.append(work_dir + '/out%d.ll' % i)
 
+    flags_available = get_all_opt_flags_available(work_dir + '/out0.ll')
+
     ga = GeneticAlgorithm(num_generations, num_individuals, pb_cross, pb_mutate, NeuralNetworkIndividual,
-                          [work_dir, files, features_train],
+                          [work_dir, files, features_train, flags_available],
                           work_dir + '/' + output_file)
     best = ga.evolution(True)
 
@@ -54,8 +56,10 @@ def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cros
 
     commands_getoutput('clang++ -std=c++11 -c -emit-llvm %s -o %s' % (file_path, work_dir + '/out.ll'))
 
+    flags_available = get_all_opt_flags_available(work_dir + '/out.ll')
+
     ga = GeneticAlgorithm(num_generations, num_individuals, pb_cross, pb_mutate, NeuralNetworkIndividual,
-                          [work_dir, [work_dir + '/out.ll'], features_train],
+                          [work_dir, [work_dir + '/out.ll'], features_train, flags_available],
                           work_dir + '/' + output_file)
     best = ga.evolution(True)
 
