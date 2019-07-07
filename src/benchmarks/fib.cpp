@@ -1,4 +1,5 @@
 #include <chrono>
+#include <cstdio>
 
 using namespace std;
 using namespace std::chrono;
@@ -13,8 +14,20 @@ long long int f(long n) {
 
 int main() {
     
+    long long int a; 
     
-    long long int a = f(10);
+    double total = 0.0;
+    high_resolution_clock::time_point s;
+    duration<double> diff = {};
     
-	return a;
+    for (int i = 0; i < 10; ++i) {
+    	s = high_resolution_clock::now();
+		a = f(33);
+		diff = high_resolution_clock::now() - s;
+		total += diff.count()*1000;
+    }
+    
+    printf("%f\n",total/10);
+    
+	return 0;
 }
