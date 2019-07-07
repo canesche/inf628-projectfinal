@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class NeuralNetwork:
     def __init__(self, dims, activation_hidden, activation_output, lamb=0):
         self.dims = dims

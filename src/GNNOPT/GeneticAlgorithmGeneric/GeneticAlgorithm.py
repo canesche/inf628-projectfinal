@@ -1,7 +1,6 @@
 import heapq
 import random
 from copy import deepcopy
-from math import ceil
 
 
 class GeneticAlgorithm:
@@ -25,7 +24,8 @@ class GeneticAlgorithm:
             ind.set_fitness(score)
 
         for g in range(self.num_gen):
-            offspring = self.selection(int(ceil(self.pop_size * 0.3)))
+            elite = self.getKbest(self.population, 1)
+            offspring = self.selection(15, 1) + elite
             offspring = list(map(deepcopy, offspring))
             for child1, child2 in zip(offspring[::2], offspring[1::2]):
                 if random.random() < self.pb_cx:
@@ -59,9 +59,9 @@ class GeneticAlgorithm:
     def evaluate(self, ind):
         return ind.evaluate()
 
-    def selection(self, tournsize):
+    def selection(self, tournsize, elite_size):
         chosen = []
-        n = len(self.population)
+        n = len(self.population) - elite_size
         for i in range(n):
             aspirants = [random.choice(self.population) for _ in range(tournsize)]
             chosen.append(max(aspirants))

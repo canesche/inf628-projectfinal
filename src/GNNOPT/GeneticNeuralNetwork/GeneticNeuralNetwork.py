@@ -118,25 +118,23 @@ class NeuralNetworkIndividual(BaseIndividual):
 
     def crossover(self, partner):
         for w, pw in zip(self.gene.weights, partner.gene.weights):
-            self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
+            # self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
+            self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
 
     def __mutate(self, ind):
         l, c = ind.shape
         randC = random.randint(0, l - 1)
         for i in range(c):
-            ind[randC][i] += random.uniform(-1, 1)
-            if ind[randC][i] > 1:
-                ind[randC][i] = 1
-            elif ind[randC][i] < -1:
-                ind[randC][i] = -1
+            ind[randC][i] += 0.1 * (random.random() * 2 - 1)
 
     def __umutate(self, ind, prob_m):
         l, c = ind.shape
         for i in range(l):
             for j in range(c):
                 if random.random() < prob_m:
-                    ind[i][j] += 0.01 * (random.random() * 2 - 1)
+                    ind[i][j] += 0.1 * (random.random() * 2 - 1)
 
     def mutate(self):
         for w in self.gene.weights:
-            self.__umutate(self.gene.weights[w], 0.01)
+            self.__mutate(self.gene.weights[w])
+            #self.__umutate(self.gene.weights[w], 0.01)
