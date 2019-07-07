@@ -1,9 +1,10 @@
 #include <algorithm>
 #include <cmath>
+#include <fstream>
 #include "ga.h"
 #include "individual.h"
 
-GA::GA(string name, int pop_size = 100, int generations = 100, int elite_size = 10, int tour_size = 20, int mut_rate = 20) {
+GA::GA(string name, int pop_size = 100, int generations = 100, int elite_size = 10, int tour_size = 20, int mut_rate = 30, int grow_rate = 20) {
     srand(time(nullptr)+rand());
     this->name = name;
     this->population_size = pop_size;
@@ -11,9 +12,10 @@ GA::GA(string name, int pop_size = 100, int generations = 100, int elite_size = 
     this->elite_size = elite_size;
     this->tournament_size = tour_size;
     this->mutation_rate = mut_rate;
+    this->grow_rate = grow_rate;
 
     // create a bitecode
-    string create_bc = "clang++-8 -S -emit-llvm ../../benchmarks/"+name+".cpp -o ../bitecode/"+name+".ll";
+    string create_bc = "clang++ -w -S -emit-llvm ../../benchmarks/"+name+".cpp -o ../bitecode/"+name+".ll";
     system(create_bc.c_str());
 
     for (int i = 0; i < pop_size; ++i) {
@@ -43,6 +45,10 @@ int GA::get_mutate_rate() const {
     return this->mutation_rate;
 }
 
+int GA::get_grow_rate() const {
+    return this->grow_rate;
+}
+
 int GA::get_size_tournament() const {
     return this->tournament_size;
 }
@@ -63,7 +69,7 @@ pair<double, Individual> GA::mutation(pair<double, Individual> ind){
 
     // probability of grow up the vector
     prob = 1 + rand() % 100;
-    if (prob <= get_mutate_rate()){
+    if (prob <= get_grow_rate()){
         int n = 1 + rand() % 10;
         for (int i = 0; i < n; ++i) {
             ind.second.setGene(rand() % 173);
@@ -139,14 +145,49 @@ void GA::envolve() {
 
     best_pop_global.first = population[0].first;
     best_pop_global.second = population[0].second;
-    int id_best = 0; 
+
+    int id_best = 0;
+    double sum_fitness = 0, sum_std = 0, std, avg;
+
+    ofstream write;
+    write.open("../results/gaopt_results_"+name+".csv");
+    write << "generation, size population, fitness min, fitness max, fitness average, fitness std\n";
+    write.close();
 
     for (int i = 0; i < tam_generation; ++i) {
         // sorting vector population
         sort(population.begin(), population.end(), compareInterval);
 
-        printf("Generation: %d best individual %f\n", i, population[0].first);
-        population[0].second.print();
+        sum_fitness = sum_std = 0;
+
+        for (int j = 0; j < tam_population; ++j) {
+            sum_fitness += population[j].first;
+        }
+
+        avg = sum_fitness / tam_population;
+
+        for (int j = 0; j < tam_population; ++j) {
+            sum_std += pow((population[j].first - avg),2);
+        }
+
+        std = sqrt(sum_std/(tam_population));
+
+        // -------------------------------------------------------------------
+        // save information
+
+        printf("\nGeneration %d\n", i);
+        printf(" Evaluated %d individuals\n", get_size_population());
+        printf(" Fitness Min: %f\n", population[tam_population-1].first);
+        printf(" Fitness Max: %f\n", population[0].first);
+        printf(" Fitness Avg: %f\n", avg);
+        printf(" Fitness Std: %f\n\n", std);
+
+        ofstream write;
+        write.open("../results/gaopt_results_"+name+".csv", std::ios_base::app);
+        write << i << "," << get_size_population() << "," << population[tam_population-1].first << ",";
+        write << population[0].first << "," << avg << "," << std << "\n";
+        write.close();
+        // -------------------------------------------------------------------
 
         if (best_pop_global.first < population[0].first) {
             best_pop_global.first = population[0].first;
@@ -164,9 +205,12 @@ void GA::envolve() {
             break;
         }
 
+        // propagate the best individual to next population
+        new_pop[0] = population[0];
+
         // selection the best individuals of population before
-        for (int j = 0; j < tam_elite; ++j) {
-            new_pop[j] = mutation(population[i]);
+        for (int j = 1; j < tam_elite; ++j) {
+            new_pop[j] = mutation(population[j-1]);
         }
 
         Individual c1, c2;

@@ -6,15 +6,12 @@ using namespace std;
 
 int main(void) {
 
-     //Individual v = Individual("teste");
+     // name, pop_size, generation, elite_size, tour_size, mut_rate, grow_rate
+     GA ga_fib = GA("fib", 100, 100, 10, 20, 20, 30);
+     ga_fib.envolve();
 
-     //v.print();
-     //printf("evaluate = %f\n",v.evaluate());
+    //GA ga_quick = GA("quicksort", 10, 10, 10, 20, 20, 30);
+    //ga_quick.envolve();
 
-     // string name, int pop_size = 100, int generations = 100, int elite_size = 10, int tour_size = 20, int mut_rate = 20)
-
-     GA ga_teste = GA("teste", 100, 10, 10, 20, 30);
-     ga_teste.envolve();
-     
      return(0);
 }
