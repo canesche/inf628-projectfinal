@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
 #define  nil		0
 #define	 false		0
 #define  true		1
@@ -182,6 +187,19 @@ void Queens (int run) {
 int main()
 {
 	int i;
-	for (i = 0; i < 100; i++) Queens(i);
+	
+	double total = 0.0;
+    high_resolution_clock::time_point s;
+    duration<double> diff = {};
+	
+	for (int i = 0; i < 10; ++i) {
+    	s = high_resolution_clock::now();
+		for (int j = 0; j < 100; j++) Queens(j);
+		diff = high_resolution_clock::now() - s;
+		total += diff.count()*1000;
+    }
+	
+	printf("%f\n",total/10);
+	
 	return 0;
 }
