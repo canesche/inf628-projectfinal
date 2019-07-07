@@ -4,7 +4,7 @@ import time
 from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual
 from NeuralNetwork.ActivationFunctions import Relu, Sigmoid
 from NeuralNetwork.NeuralNetwork import NeuralNetwork
-from Utils.Utils import commands_getoutput, map_number
+from Utils.Utils import map_number, command_shell
 
 
 class NeuralNetworkIndividual(BaseIndividual):
@@ -57,7 +57,7 @@ class NeuralNetworkIndividual(BaseIndividual):
         self.features = args[2]
         self.ll_file = args[1]
         self.bc_file = '%s/out.bc' % self.work_dir
-        self.exe_file = '%s/out.exe' % self.work_dir
+        self.exe_file = '%s/out.exe > /dev/null 2>&1' % self.work_dir
         self.max_flags = len(self.__CONST_FLAGS)
 
         num_hidden = random.randint(1, 5)
@@ -87,13 +87,18 @@ class NeuralNetworkIndividual(BaseIndividual):
     def evaluate(self):
         t = 0
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
-            commands_getoutput('opt -no-warn %s -S -o %s %s' % (flags, self.bc_file, ll_file))
-            commands_getoutput('clang++ -w %s -lm -o %s' % (self.bc_file, self.exe_file))
+            command_shell('opt -no-warn %s -S -o %s %s > /dev/null 2>&1' % (flags, self.bc_file, ll_file))
+            command_shell('clang++ -w %s -lm -o %s > /dev/null 2>&1' % (self.bc_file, self.exe_file))
+            now = time.time()
+            command_shell(self.exe_file)
+            t = time.time() - now
             for i in range(10):
                 now = time.time()
-                commands_getoutput(self.exe_file)
-                t += time.time() - now
-            t /= 10
+                command_shell(self.exe_file)
+                tt = time.time() - now
+                if tt > t:
+                    t = tt
+
         return 1 / t
 
     def __crossover(self, ind1, ind2):
@@ -137,4 +142,4 @@ class NeuralNetworkIndividual(BaseIndividual):
     def mutate(self):
         for w in self.gene.weights:
             self.__mutate(self.gene.weights[w])
-            #self.__umutate(self.gene.weights[w], 0.01)
+            # self.__umutate(self.gene.weights[w], 0.01)
