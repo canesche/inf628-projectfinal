@@ -147,8 +147,8 @@ void Mm (int run)    {
     for ( i = 1; i <= rowsize; i++ )
 		for ( j = 1; j <= rowsize; j++ ) 
 			rInnerproduct(&rmr[i][j],rma,rmb,i,j);
-    if (run < rowsize)
-      printf("%f\n", rmr[run + 1][run + 1]);
+    //if (run < rowsize)
+      //printf("%f\n", rmr[run + 1][run + 1]);
 }
 
 int main()
