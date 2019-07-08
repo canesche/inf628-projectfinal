@@ -48,7 +48,7 @@ class NeuralNetworkIndividual(BaseIndividual):
             if len(r) == 0:
                 r = commands_getoutput('clang++ -w %s -o %s' % (self.bc_file, self.exe_file))
                 if len(r) == 0:
-                    t = float(commands_getoutput(self.exe_file))
+                    t = float(commands_getoutput(self.work_dir + '/measurer.sh %s 10' % self.exe_file))
                 else:
                     t = 100000
             else:
@@ -77,8 +77,8 @@ class NeuralNetworkIndividual(BaseIndividual):
 
     def crossover(self, partner):
         for w, pw in zip(self.gene.weights, partner.gene.weights):
-            # self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
-            self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
+            self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
+            # self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
 
     def __mutate(self, ind):
         l, c = ind.shape
@@ -95,5 +95,5 @@ class NeuralNetworkIndividual(BaseIndividual):
 
     def mutate(self):
         for w in self.gene.weights:
-            self.__mutate(self.gene.weights[w])
-            # self.__umutate(self.gene.weights[w], 0.01)
+            # self.__mutate(self.gene.weights[w])
+            self.__umutate(self.gene.weights[w], 0.01)

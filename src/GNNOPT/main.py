@@ -101,6 +101,17 @@ if __name__ == "__main__":
     file_path = args['file']
     output_file = args['output']
 
+    measurer_script = '#!/usr/bin/env bash\nEXE="./$1"\nSAMPLES=$2\nTIME="0.0"\nfor (( c=1; c<=$SAMPLES; c++ )) do\n' \
+                      '\tTIME=$(python -c "print($TIME + $( $EXE ))")\n' \
+                      'done\n' \
+                      'TIME=$(python -c "print($TIME / $SAMPLES)")\n' \
+                      'echo "$TIME"'
+
+    f = open(work_dir + '/measurer.sh', 'w')
+    f.write(measurer_script)
+    f.close()
+    commands_getoutput('chmod +x %s' % work_dir + '/measurer.sh')
+
     if args['run'] == 'flags' and file_path:
         try:
             f = open(work_dir + '/best.dat', 'rb')
