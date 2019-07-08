@@ -1,33 +1,37 @@
 #include <chrono>
 #include <cstdio>
+#include <cstdlib>
+
 
 using namespace std;
 using namespace std::chrono;
 
-long long int f(long n) {
-    if (n == 1)
+long long int fib(long int long n) {
+    if (n <= 2)
         return 1;
-    if (n == 2)
-        return 1;
-    return f(n-1) + f(n-2);
+    
+    return fib(n-1) + fib(n-2);
 }
 
-int main() {
+int main(int argc, char * argv[]) {
     
-    long long int a; 
-    
+    long long int a = 0; 
+    int n = 33;
+    if(argc > 1){
+      n = atoi(argv[1]);
+    }
+
     double total = 0.0;
     high_resolution_clock::time_point s;
     duration<double> diff = {};
+    s = high_resolution_clock::now();
     
-    for (int i = 0; i < 10; ++i) {
-    	s = high_resolution_clock::now();
-		a = f(33);
-		diff = high_resolution_clock::now() - s;
-		total += diff.count()*1000;
-    }
+    a = fib(n);
+	
+    diff = high_resolution_clock::now() - s;
+    total = diff.count()*1000;
+        
+    printf("%lf\n",total);
     
-    printf("%f\n",total/10);
-    
-	return 0;
+   return a;
 }

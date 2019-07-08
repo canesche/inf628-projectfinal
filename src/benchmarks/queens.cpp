@@ -180,8 +180,8 @@ void Doit () {
 
 void Queens (int run) {
     int i;
-    for ( i = 1; i <= 50; i++ ) Doit();
-	 //printf("%d\n", run + 1);
+    for ( i = 1; i <= 50; i++ )
+        Doit();
 }
 
 int main()
@@ -191,15 +191,14 @@ int main()
 	double total = 0.0;
     high_resolution_clock::time_point s;
     duration<double> diff = {};
-	
-	for (int i = 0; i < 10; ++i) {
-    	s = high_resolution_clock::now();
-		for (int j = 0; j < 100; j++) Queens(j);
-		diff = high_resolution_clock::now() - s;
-		total += diff.count()*1000;
-    }
-	
-	printf("%f\n",total/10);
+
+    s = high_resolution_clock::now();
+    for (int j = 0; j < 100; j++) 
+        Queens(j);
+    diff = high_resolution_clock::now() - s;
+    total = diff.count()*1000;
+    
+	printf("%lf\n",total);
 	
 	return 0;
 }

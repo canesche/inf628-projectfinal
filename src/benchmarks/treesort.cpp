@@ -191,12 +191,12 @@ int main()
     high_resolution_clock::time_point s;
     duration<double> diff = {};
     
-    for (int j = 0; j < 10; ++j) {
-		s = high_resolution_clock::now();
-		for (i = 0; i < 100; i++) Trees(i);
-		diff = high_resolution_clock::now() - s;
-	}
-	total += diff.count()*1000;
+    s = high_resolution_clock::now();
+    for (i = 0; i < 100; i++) 
+        Trees(i);
+    diff = high_resolution_clock::now() - s;
 	
-	printf("%f\n",total/10);
+	total = diff.count()*1000;
+	
+	printf("%lf\n",total);
 }

@@ -48,7 +48,7 @@ class NeuralNetworkIndividual(BaseIndividual):
             if len(r) == 0:
                 r = commands_getoutput('clang++ -w %s -o %s' % (self.bc_file, self.exe_file))
                 if len(r) == 0:
-                    t = float(commands_getoutput(self.work_dir + '/measurer.sh %s 10' % self.exe_file))
+                    t = float(commands_getoutput(self.work_dir + '/measurer.sh %s 3' % self.exe_file))
                 else:
                     t = 100000
             else:

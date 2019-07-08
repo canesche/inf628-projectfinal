@@ -13,8 +13,6 @@ int main(int argc, char *argv[]){
     int L2 = 100;
     int C2 = 100;
     
-    int SAMPLES = 10;
-    
     if(argc > 4){
         
        L1 = atoi(argv[1]);
@@ -25,10 +23,6 @@ int main(int argc, char *argv[]){
        if(C1 != L2){
           printf("Error: C1(%d) != L2(%d)\n",C1,L2);    
        }
-    }
-    
-    if(argc > 5){
-        SAMPLES = atoi(argv[5]);
     }
     
     auto m1 = new double *[L1];
@@ -47,23 +41,21 @@ int main(int argc, char *argv[]){
     high_resolution_clock::time_point tp;
     duration<double> diff = {};
     double cpuExecTime = 0.0;
-    
-    for(int s = 0; s < SAMPLES; s++){
-        tp = high_resolution_clock::now();
-        for(int i = 0; i < L1;i++){
-            for(int j = 0; j < C2;j++){
-                double sum = 0;
-                for(int k = 0;k < C1;k++){
-                sum += m1[i][k] * m2[k][j];
-                }
-                m3[i][j] = sum;
+
+    tp = high_resolution_clock::now();
+    for(int i = 0; i < L1;i++){
+        for(int j = 0; j < C2;j++){
+            double sum = 0;
+            for(int k = 0;k < C1;k++){
+            sum += m1[i][k] * m2[k][j];
             }
+            m3[i][j] = sum;
         }
-        diff = high_resolution_clock::now() - tp;
-        cpuExecTime += (diff.count() * 1000);
     }
+    diff = high_resolution_clock::now() - tp;
+    cpuExecTime = (diff.count() * 1000);
     
-    printf("%f\n",cpuExecTime);
+    printf("%lf\n",cpuExecTime);
      
     int l = rand()%L1;  
     int c = rand()%C2;    
