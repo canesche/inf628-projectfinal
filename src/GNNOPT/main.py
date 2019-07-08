@@ -67,7 +67,6 @@ def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cros
     pickle.dump(best, pickle_out)
     pickle_out.close()
 
-
 def get_args():
     ap = argparse.ArgumentParser('python3 main.py')
     ap.add_argument('-r', '--run', required=True,
