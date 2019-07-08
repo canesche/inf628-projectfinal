@@ -5,10 +5,13 @@
 #include <fstream>
 #include <sys/resource.h>
 #include <chrono>
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
 
 #define NUMBERS_FLAGS 173
 
-using namespace chrono;
+using namespace std;
 
 // -early-cse-memssa
 
@@ -54,7 +57,7 @@ Individual::Individual(string name){
     // Size initial of genes
     srand(time(nullptr)+rand());
     int n;
-    const int size = 1; //1+ rand() % 25;
+    const int size = 1 + rand() % 5;
     bool have[NUMBERS_FLAGS];
 
     for(int i = 0; i < NUMBERS_FLAGS; ++i){
@@ -134,32 +137,31 @@ double Individual::evaluate() const {
         flags += " ";
     }
 
-    string create_sys, create_exec;
+    string create_sys;
     string name = this->name;
+
+    //flags = "";
 
     // create the optimizer
     create_sys = "opt -no-warn "+flags+" -S -o ../bitecode/opt_"+name+".ll ../bitecode/"+name+".ll\n";
-    create_sys += "clang++ -w ../bitecode/opt_"+name+".ll -lm -o "+name+".out";
-    create_exec = "./"+name+".out";
+    create_sys += "clang++ -w ../bitecode/opt_"+name+".ll -o "+name+".out\n";
+    create_sys += "./"+name+".out > time.txt";
 
+    //printf("%s", create_sys.c_str());
     // execute code external
     system(create_sys.c_str());
 
-    duration<double> diff;
+    double total;
 
-    double worst = -1.0, total = 0.0;
-    for (int i = 0; i < 10; i++) {
-        auto begin = high_resolution_clock::now();
-        system(create_exec.c_str());
-        diff = high_resolution_clock::now() - begin;
-        if (worst < diff.count()) {
-            worst = diff.count();
-        }
-        total += diff.count();
-    }
+    //getline(reader,total);
+    FILE *fp = fopen("time.txt", "r");
+    fscanf(fp, "%lf", &total);
+    fclose(fp);
+
+    //cout << total << endl;
 
     // time in milliseconds
-    return 1.0/(total/10.0);
+    return 1.0/total;
 }
 
 void Individual::saveIndividual(double value){

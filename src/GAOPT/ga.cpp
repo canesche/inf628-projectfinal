@@ -61,14 +61,14 @@ pair<double, Individual> GA::mutation(pair<double, Individual> ind){
     srand(time(nullptr)+rand());
     int prob;
     for (int i = 0; i < ind.second.get_size_Individual(); ++i) {
-        prob = 1 + rand() % 100;
+        prob = rand() % 100;
         if (prob <= get_mutate_rate()){
             ind.second.change_individual(i);
         }
     }
 
     // probability of grow up the vector
-    prob = 1 + rand() % 100;
+    prob = rand() % 100;
     if (prob <= get_grow_rate()){
         int n = 1 + rand() % 10;
         for (int i = 0; i < n; ++i) {

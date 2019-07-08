@@ -4,14 +4,19 @@
 
 using namespace std;
 
-int main(void) {
+int main(int argc, char* argv[]) {
+
+    if(argc < 2) {
+        printf("Number of arguments invalids!\n");
+        printf("Please, pass the name of algorithm\n");
+        return 0;
+    }
+
+    string name = argv[1];
 
      // name, pop_size, generation, elite_size, tour_size, mut_rate, grow_rate
-     GA ga_fib = GA("fib", 100, 100, 10, 20, 20, 30);
+     GA ga_fib = GA(name, 100, 100, 10, 20, 20, 30);
      ga_fib.envolve();
-
-    //GA ga_quick = GA("quicksort", 10, 10, 10, 20, 20, 30);
-    //ga_quick.envolve();
 
      return(0);
 }
