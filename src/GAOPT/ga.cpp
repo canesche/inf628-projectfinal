@@ -15,7 +15,7 @@ GA::GA(string name, int pop_size = 100, int generations = 100, int elite_size = 
     this->grow_rate = grow_rate;
 
     // create a bitecode
-    string create_bc = "clang++ -w -S -emit-llvm ../../benchmarks/"+name+".cpp -o ../bitecode/"+name+".ll";
+    string create_bc = "clang++ -std=c++11 -w -S -emit-llvm ../../benchmarks/"+name+".cpp -o ../bitecode/"+name+".ll";
     system(create_bc.c_str());
 
     for (int i = 0; i < pop_size; ++i) {
