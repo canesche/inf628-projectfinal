@@ -57,7 +57,7 @@ Individual::Individual(string name){
     // Size initial of genes
     srand(time(nullptr)+rand());
     int n;
-    const int size = 1 + rand() % 5;
+    const int size = 1 + rand() % 10;
     bool have[NUMBERS_FLAGS];
 
     for(int i = 0; i < NUMBERS_FLAGS; ++i){
@@ -142,14 +142,35 @@ double Individual::evaluate() const {
 
     //flags = "";
 
+    int r;
+
     // create the optimizer
-    create_sys = "opt -no-warn "+flags+" -S -o ../bitecode/opt_"+name+".ll ../bitecode/"+name+".ll\n";
-    create_sys += "clang++ -w ../bitecode/opt_"+name+".ll -o "+name+".out\n";
-    create_sys += "./"+name+".out > time.txt";
+    create_sys = "rm -rf time.txt ../bitecode/opt_"+name+".ll > /dev/null 2>&1\n";
+
+    r = system(create_sys.c_str());
+
+    create_sys = "opt -no-warn "+flags+" -S -o ../bitecode/opt_"+name+".ll ../bitecode/"+name+".ll > /dev/null 2>&1\n";
+
+    r = system(create_sys.c_str());
+    //printf("%d\n", r);
+    if (r != 0) {
+        return 0;
+    }
+
+    create_sys = "clang++ -std=c++11 -w ../bitecode/opt_"+name+".ll -o "+name+".out > /dev/null 2>&1\n";
+
+    r = system(create_sys.c_str());
+    if(r != 0)
+        return 0;
+    //printf("%d\n", r);
+
+    create_sys = "./"+name+".out > time.txt";
+
+    r = system(create_sys.c_str());
+    //printf("%d\n", r);
 
     //printf("%s", create_sys.c_str());
     // execute code external
-    system(create_sys.c_str());
 
     double total;
 

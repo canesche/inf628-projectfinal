@@ -1,3 +1,0 @@
-18
-0.0453594
--interleaved-load-combine -guard-widening -loop-interchange -lower-guard-intrinsic -break-crit-edges -loop-unswitch -early-cse -codegenprepare -globalsplit -lower-guard-intrinsic -alloca-hoisting -slp-vectorizer -scoped-noalias -slsr -callsite-splitting -profile-summary-info -intervals -mergeicmps 
