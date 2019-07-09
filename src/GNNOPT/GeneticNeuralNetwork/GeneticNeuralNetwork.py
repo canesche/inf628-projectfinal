@@ -49,9 +49,9 @@ class NeuralNetworkIndividual(BaseIndividual):
                     r = commands_getoutput(self.work_dir + '/measurer.sh %s 3' % self.exe_file)
                     t = float(r)
                 else:
-                    t = 1000000
+                    t = -1
             else:
-                t = 100000
+                t = -2
         return 1 / t
 
     def __crossover(self, ind1, ind2):

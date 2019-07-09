@@ -5,7 +5,7 @@ import traceback
 from FeaturesExtractor.CodeFeaturesExtractor import CodeFeaturesExtractor
 from GeneticAlgorithmGeneric.GeneticAlgorithm import GeneticAlgorithm
 from GeneticNeuralNetwork.GeneticNeuralNetwork import NeuralNetworkIndividual
-from Utils.Utils import commands_getoutput, map_number, get_all_opt_flags_available
+from Utils.Utils import commands_getoutput, map_number, get_all_opt_flags_available, command_shell
 
 
 def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
@@ -74,7 +74,7 @@ def get_args():
                          '\'flags\': Show set of flags of the best individual.\n'
                          '\'run_file\': Run genetic algorithm for input file.\n'
                          '\'run_dir\': Run genetic algorithm for all files in directory.')
-
+    ap.add_argument('-b', '--best', help='Best .dat file', required=True)
     ap.add_argument('-f', '--file', help='Input file C/C++')
     ap.add_argument('-d', '--dir', help='Location for input C/C++ files')
 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     f = open(work_dir + '/measurer.sh', 'w')
     f.write(measurer_script)
     f.close()
-    commands_getoutput('chmod +x %s' % work_dir + '/measurer.sh')
+    command_shell('chmod +x %s' % work_dir + '/measurer.sh')
 
     if args['run'] == 'flags' and file_path:
         try:
@@ -135,7 +135,7 @@ if __name__ == "__main__":
 
         except Exception as e:
             traceback.print_exc()
-            exit(1)
+
     elif args['run'] == 'test' and file_path:
         try:
             f = open(work_dir + '/best.dat', 'rb')
@@ -158,21 +158,20 @@ if __name__ == "__main__":
             print('Execution time: %f' % ind.evaluate())
 
         except Exception as e:
-            print(e)
             traceback.print_exc()
     elif args['run'] == 'run_file' and file_path:
         try:
             exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file)
         except Exception as e:
-            print(e)
             traceback.print_exc()
     elif args['run'] == 'run_dir':
         try:
             exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file)
         except Exception as e:
             traceback.print_exc()
-            exit(4)
     elif not file_path and args['run'] != 'run_file':
         print('File path missing!')
     else:
         ap.print_help()
+
+    command_shell('rm -rf %s/*.bc %s/*.ll %s/*.exe %s/*.sh' % (work_dir, work_dir, work_dir, work_dir))
