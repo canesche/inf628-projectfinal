@@ -1,3 +1,4 @@
+import os
 import sys
 
 if sys.version_info < (2, 7):
@@ -19,13 +20,15 @@ def commands_getoutput(cmd):
 
 
 def command_shell(cmd):
+    FNULL = open(os.devnull, 'w')
     try:
-        p = subprocess.Popen(cmd, stderr=subprocess.STDOUT, shell=True)
+        p = subprocess.Popen(cmd, stderr=FNULL, stdout=FNULL, shell=True)
         p.wait()
-        return '0'
-    except Exception as e:
-        return str(e)
-
+        FNULL.close()
+        return (p.returncode == 0)
+    except:
+        FNULL.close()
+        return False
 
 def map_number(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
