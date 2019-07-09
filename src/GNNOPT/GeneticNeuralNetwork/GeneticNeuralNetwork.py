@@ -3,7 +3,7 @@ import random
 from GeneticAlgorithmGeneric.GeneticAlgorithm import BaseIndividual
 from NeuralNetwork.ActivationFunctions import Relu, Sigmoid
 from NeuralNetwork.NeuralNetwork import NeuralNetwork
-from Utils.Utils import map_number, commands_getoutput
+from Utils.Utils import map_number, commands_getoutput, command_shell
 
 
 class NeuralNetworkIndividual(BaseIndividual):
@@ -44,15 +44,14 @@ class NeuralNetworkIndividual(BaseIndividual):
     def evaluate(self):
         t = 0
         for flags, ll_file in zip(self.get_flags(), self.ll_file):
-            r = commands_getoutput('opt %s %s -o %s' % (flags, ll_file, self.bc_file))
-            if len(r) == 0:
-                r = commands_getoutput('clang++ -w %s -o %s' % (self.bc_file, self.exe_file))
-                if len(r) == 0:
-                    t = float(commands_getoutput(self.work_dir + '/measurer.sh %s 3' % self.exe_file))
+            if command_shell('opt %s %s -o %s > /dev/null' % (flags, ll_file, self.bc_file)):
+                if command_shell('clang++ -w %s -o %s > /dev/null' % (self.bc_file, self.exe_file)):
+                    r = commands_getoutput(self.work_dir + '/measurer.sh %s 3' % self.exe_file)
+                    t = float(r)
                 else:
-                    t = 100000
+                    t = 1000000
             else:
-                t = 1000000
+                t = 100000
         return 1 / t
 
     def __crossover(self, ind1, ind2):
@@ -77,8 +76,8 @@ class NeuralNetworkIndividual(BaseIndividual):
 
     def crossover(self, partner):
         for w, pw in zip(self.gene.weights, partner.gene.weights):
-            self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
-            # self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
+            # self.__ucrossover(self.gene.weights[w], partner.gene.weights[pw], 0.3)
+            self.__crossover(self.gene.weights[w], partner.gene.weights[pw])
 
     def __mutate(self, ind):
         l, c = ind.shape
@@ -95,5 +94,5 @@ class NeuralNetworkIndividual(BaseIndividual):
 
     def mutate(self):
         for w in self.gene.weights:
-            # self.__mutate(self.gene.weights[w])
-            self.__umutate(self.gene.weights[w], 0.01)
+            self.__mutate(self.gene.weights[w])
+            # self.__umutate(self.gene.weights[w], 0.01)
