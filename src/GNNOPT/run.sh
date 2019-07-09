@@ -12,5 +12,5 @@ python3 main.py -r run_file -f ../benchmarks/treesort.cpp -b best_treesort.dat -
 echo "queens"
 python3 main.py -r run_file -f ../benchmarks/queens.cpp -b best_queens.dat -g 100 -i 100 -w work_dir -o queens.csv
 
-echo "floatmm"
-python3 main.py -r run_file -f ../benchmarks/mm.cpp -b best_mm.data -g 100 -i 100 -w work_dir -o mm.csv
+echo "mm"
+python3 main.py -r run_file -f ../benchmarks/mm.cpp -b best_mm.dat -g 100 -i 100 -w work_dir -o mm.csv

@@ -7,11 +7,11 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]){
     
-    int L1 = 100;
-    int C1 = 100;
+    int L1 = 200;
+    int C1 = 200;
 
-    int L2 = 100;
-    int C2 = 100;
+    int L2 = 200;
+    int C2 = 200;
     
     if(argc > 4){
         
