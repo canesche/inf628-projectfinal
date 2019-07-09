@@ -11,6 +11,7 @@
 **/*.exe
 **/*.csv
 **/*.dat
+**/work_dir
 
 
 

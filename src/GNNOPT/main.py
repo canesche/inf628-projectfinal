@@ -8,7 +8,7 @@ from GeneticNeuralNetwork.GeneticNeuralNetwork import NeuralNetworkIndividual
 from Utils.Utils import commands_getoutput, map_number, get_all_opt_flags_available, command_shell
 
 
-def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
+def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file, best_file):
     f = CodeFeaturesExtractor()
     features = f.get_features(file_dir)
     features_train = f.get_train_data(file_dir)
@@ -35,12 +35,12 @@ def exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross,
                           work_dir + '/' + output_file)
     best = ga.evolution(True)
 
-    pickle_out = open(work_dir + '/best.dat', 'wb')
+    pickle_out = open(best_file, 'wb')
     pickle.dump(best, pickle_out)
     pickle_out.close()
 
 
-def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file):
+def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file, best_file):
     f = CodeFeaturesExtractor()
     features_train = f.get_single_train_data(file_path)
 
@@ -63,7 +63,7 @@ def exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cros
                           work_dir + '/' + output_file)
     best = ga.evolution(True)
 
-    pickle_out = open(work_dir + '/best.dat', 'wb')
+    pickle_out = open(best_file, 'wb')
     pickle.dump(best, pickle_out)
     pickle_out.close()
 
@@ -100,6 +100,7 @@ if __name__ == "__main__":
     file_dir = args['dir']
     file_path = args['file']
     output_file = args['output']
+    best_file = args['best']
 
     measurer_script = '#!/usr/bin/env bash\nEXE="./$1"\nSAMPLES=$2\nTIME="0.0"\nfor (( c=1; c<=$SAMPLES; c++ )) do\n' \
                       '\tTIME=$(python -c "print($TIME + $( $EXE ))")\n' \
@@ -114,7 +115,7 @@ if __name__ == "__main__":
 
     if args['run'] == 'flags' and file_path:
         try:
-            f = open(work_dir + '/best.dat', 'rb')
+            f = open(best_file, 'rb')
             ind = pickle.load(f)
             f.close()
             f = CodeFeaturesExtractor()
@@ -138,7 +139,7 @@ if __name__ == "__main__":
 
     elif args['run'] == 'test' and file_path:
         try:
-            f = open(work_dir + '/best.dat', 'rb')
+            f = open(best_file, 'rb')
             ind = pickle.load(f)
             f.close()
             f = CodeFeaturesExtractor()
@@ -161,12 +162,14 @@ if __name__ == "__main__":
             traceback.print_exc()
     elif args['run'] == 'run_file' and file_path:
         try:
-            exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file)
+            exec_for_file(file_path, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file,
+                          best_file)
         except Exception as e:
             traceback.print_exc()
     elif args['run'] == 'run_dir':
         try:
-            exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file)
+            exec_for_dir(file_dir, work_dir, num_generations, num_individuals, pb_cross, pb_mutate, output_file,
+                         best_file)
         except Exception as e:
             traceback.print_exc()
     elif not file_path and args['run'] != 'run_file':
