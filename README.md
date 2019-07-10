@@ -18,4 +18,4 @@ Version utilized of LLVM in this work: 8.0
 
 # Acknowledgment
 
-Thanks for Professor Ricardo Ferreira, Fernando Quintão and ... 
+Thanks for Professor Ricardo Ferreira and Professor Fernando Quintão.
